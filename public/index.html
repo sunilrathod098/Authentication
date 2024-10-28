@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #070707;
+            /* White background */
+            color: #333;
+            /* Dark text for contrast */
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 20px auto;
+            background: #383636;
+            /* Light grey background for containers */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #ff8c00;
+            /* Orange color */
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #ff8c00;
+            /* Orange border on focus */
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #ff8c00;
+            /* Orange button */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #e07b00;
+            /* Darker orange on hover */
+        }
+
+        .message {
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .success {
+            color: rgb(9, 197, 6);
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Register</h2>
+        <input type="text" id="registerEmail" placeholder="Email" required>
+        <input type="password" id="registerPassword" placeholder="Password" required>
+        <button onclick="register()">Register</button>
+        <div id="registerMessage" class="message"></div>
+    </div>
+
+    <div class="container">
+        <h2>Login</h2>
+        <input type="text" id="loginEmail" placeholder="Email" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button onclick="login()">Login</button>
+        <div id="loginMessage" class="message"></div>
+    </div>
+
+    <script>
+        async function register() {
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+
+            const response = await fetch(`http://localhost:3000/api/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            const message = document.getElementById('registerMessage');
+            message.className = 'message'; // Reset class for message
+            if (response.ok) {
+                message.textContent = 'User registered successfully!';
+                message.classList.add('success');
+            } else {
+                const errorText = await response.text();
+                message.textContent = `Error: ${errorText}`;
+                message.classList.add('error');
+            }
+        }
+
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const response = await fetch(`http://localhost:3000/api/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            const message = document.getElementById('loginMessage');
+            message.className = 'message'; // Reset class for message
+            if (response.ok) {
+                message.textContent = 'Login successful!';
+                message.classList.add('success');
+            } else {
+                const errorText = await response.text();
+                message.textContent = `Error: ${errorText}`;
+                message.classList.add('error');
+            }
+        }
+    </script>
+
+</body>
+
+</html>
